@@ -22,3 +22,5 @@ After configure, use `sudo podman-compose up` to update a subdomain ip and obtai
 The ip address and the ssl certificate are not linked in any way. The same certificate is still valid with different ip address.
 
 You can update any of them by running `sudo podman-compose up` again anytime. You can run it every hour, for example, or at startup and again every day or every week.
+
+You can use `sudo ln -s $PWD/domain-and-ssl.service /etc/systemd/system/ && sudo systemctl enable --now domain-and-ssl` to update the ip and ssl at startup and then schedule with cron a restart of that service from time to time.

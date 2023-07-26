@@ -1,0 +1,13 @@
+[Unit]
+Description=domain-and-ssl service
+After=podman.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+WorkingDirectory=/home/pi/domain-and-ssl
+ExecStart=podman-compose up --remove-orphans
+ExecStop=podman-compose down
+
+[Install]
+WantedBy=multi-user.target
