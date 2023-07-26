@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  certbot-dns-godaddy:
+    container_name: certbot-dns-godaddy
+    build:
+      context: certbot-dns-godaddy/
+      dockerfile: Dockerfile
+    volumes:
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/log/letsencrypt:/var/log/letsencrypt
+      - ./godaddy_credentials.ini:/var/lib/letsencrypt/godaddy_credentials.ini:ro
+    user: "root"
+    command: 
+    # Upto 900 seconds. 50 is ok for me.
+      - sh 
+      - -c
+      - |
+        certbot certonly --authenticator dns-godaddy \
+        --dns-godaddy-propagation-seconds 50 \
+        --dns-godaddy-credentials /var/lib/letsencrypt/godaddy_credentials.ini \
+        --keep-until-expiring --non-interactive --expand \
+        --server https://acme-v02.api.letsencrypt.org/directory \
+        --agree-tos --email "${email}" \
+        ${domain_args}
+    restart: "on-failure:3"
+  godaddy-update-dyn-ip:
+    container_name: godaddy-update-dyn-ip
+    build:
+      context: godaddy-update-dyn-ip/
+      dockerfile: Dockerfile
+    volumes:
+      - ./godaddy_credentials.ini:/godaddy_credentials.ini
+    environment:
+      - "HOST_AND_DOMAIN=${subdomain}"
+    restart: "on-failure:3"

@@ -1,0 +1,3 @@
+[submodule "certbot-dns-godaddy"]
+	path = certbot-dns-godaddy
+	url = https://github.com/aalku/certbot-dns-godaddy.git
